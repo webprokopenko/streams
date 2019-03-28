@@ -1,17 +1,34 @@
 const stream = require('stream');
-const Chance = require('chance');
-const chance = new Chance();
+const request = require('request');
 
 class RandomStream extends stream.Readable {
-    constructor(options) {
+    constructor(options){
         super(options);
+        this.arrAssets = ['bitcoin', 'ripple','ethereum','bitcoin-cash','eos'];
+        this.url = 'https://api.coincap.io/v2/assets/';
     }
-    _read(size){
-        const chunk = chance.string();
-        console.log(`Pushing chunk of size: ${chunk.length}`);
-        this.push(chunk, 'utf8');
-        if(chance.bool({likelihood: 5})){
-            this.push(null)
+    getAssets(curr){
+        return new Promise((resolve, reject) => {
+            let url = this.url + curr;
+            request.get(url,
+                (error, response, body) => {
+                    if(error) reject(error);
+                    try {
+                        resolve(JSON.parse(body).data.priceUsd);
+                    } catch (error) {
+                        reject(error)
+                    }
+                }
+            )
+        })        
+    }
+    async _read(size){
+        if(this.arrAssets.length > 0){
+            let asset = await this.getAssets(this.arrAssets.shift())
+            this.push(asset);
+        }else{
+            this.push(null);
+            this.arrAssets = ['bitcoin', 'ripple','ethereum','bitcoin-cash','eos'];
         }
     }
 }
@@ -21,4 +38,4 @@ const randomStream = new RandomStream();
 require('http').createServer((req,res) => {
     res.writeHead(200, {'Content-type': 'text/plain'});
     randomStream.pipe(res);
-}).listen(8080, () => console.log('Listening on http://localhost:8080'));
+}).listen(2100, () => console.log('Listening on http://localhost:8100'));
