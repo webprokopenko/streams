@@ -49,41 +49,44 @@ class Source extends Readable {
     }
 }
 
-//const R = new Source(["1","2","3","4","5"], {});
-array_of_data = ['1', '2', '3', '4', '5'];
-opts = { 
-    objectMode: false, 
-    highWaterMark: 1 //1 байт лимит для буферизации данных _readableState.buffer.length будет === 1 
-}
-//const R2 = new Source(['1', '2', '3', '4', '5'], opts);
-//const R3 = new Source(array_of_data, opts);//кодировку так же можно задать с помощью метода .setEncoding('utf8')
 
-array_of_data = ['1', '2', '3', '4', '5'];
-/*при таких "настройках" потока будет ошибка. если objectMode: true то не надо указывать кодировку - ни в параметрах, ни через метод Readable.setEncoding('utf8')*/
-opts = {
-   objectMode: true
-   , encoding: 'utf8'
-};
-//const R4 = new Source(array_of_data, opts);
+module.exports = Source;
 
-//при objectMode: true можно передать как строки, или как числа (Number)
-array_of_data = [1, 2, 3, 4, 5];
-opts = {
-   objectMode: true
-};
-//const R5 = new Source(array_of_data, opts); //highWaterMark  16 - значение по умолчанию для объектов
-/*имитируем задержку при чтении данных (подобное может происходить при Writable.write(someData) === false). пример ниже взят из документации Node.JS.
-выполните код, и увидите как данные прекращаются считываться, они накапливаются в буфере, а потом продолжают считываться*/
-array_of_data = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-opts = {
-   objectMode: true
-};
+// //const R = new Source(["1","2","3","4","5"], {});
+// array_of_data = ['1', '2', '3', '4', '5'];
+// opts = { 
+//     objectMode: false, 
+//     highWaterMark: 1 //1 байт лимит для буферизации данных _readableState.buffer.length будет === 1 
+// }
+// //const R2 = new Source(['1', '2', '3', '4', '5'], opts);
+// //const R3 = new Source(array_of_data, opts);//кодировку так же можно задать с помощью метода .setEncoding('utf8')
 
-const R6 = new Source(array_of_data, opts);
-R6.on('data', (chunk) => {
-   //приостанавливаем передачу данных на 1 секунду
-   R6.pause();
-   setTimeout(() => {
-      R6.resume();//возобновим работу потока
-   }, 1000);
-});
+// array_of_data = ['1', '2', '3', '4', '5'];
+// /*при таких "настройках" потока будет ошибка. если objectMode: true то не надо указывать кодировку - ни в параметрах, ни через метод Readable.setEncoding('utf8')*/
+// opts = {
+//    objectMode: true
+//    , encoding: 'utf8'
+// };
+// //const R4 = new Source(array_of_data, opts);
+
+// //при objectMode: true можно передать как строки, или как числа (Number)
+// array_of_data = [1, 2, 3, 4, 5];
+// opts = {
+//    objectMode: true
+// };
+// //const R5 = new Source(array_of_data, opts); //highWaterMark  16 - значение по умолчанию для объектов
+// /*имитируем задержку при чтении данных (подобное может происходить при Writable.write(someData) === false). пример ниже взят из документации Node.JS.
+// выполните код, и увидите как данные прекращаются считываться, они накапливаются в буфере, а потом продолжают считываться*/
+// array_of_data = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+// opts = {
+//    objectMode: true
+// };
+
+// const R6 = new Source(array_of_data, opts);
+// R6.on('data', (chunk) => {
+//    //приостанавливаем передачу данных на 1 секунду
+//    R6.pause();
+//    setTimeout(() => {
+//       R6.resume();//возобновим работу потока
+//    }, 1000);
+// });
