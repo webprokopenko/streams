@@ -56,72 +56,73 @@ class Writer extends Writable
       done();
    }
 }
+module.exports = Writer;
 
-let array_of_data = ['1', '2', '3', '4', '5'];
-let r_opts = {/* значения по умолчанию */};
-//const R = new Source(array_of_data, r_opts);
+// let array_of_data = ['1', '2', '3', '4', '5'];
+// let r_opts = {/* значения по умолчанию */};
+// //const R = new Source(array_of_data, r_opts);
 
-let w_opts = {/* значения по умолчанию */};
-//const W = new Writer(w_opts);
-//R.pipe(W);
+// let w_opts = {/* значения по умолчанию */};
+// //const W = new Writer(w_opts);
+// //R.pipe(W);
 
-array_of_data = ['1', '2', '3', '4', '5'];
-r_opts = {encoding: 'utf8'};
-const R1 = new Source(array_of_data, r_opts);
+// array_of_data = ['1', '2', '3', '4', '5'];
+// r_opts = {encoding: 'utf8'};
+// const R1 = new Source(array_of_data, r_opts);
 
-w_opts = {
-   decodeStrings: false//данные в _write будут строками в кодировке 'utf8', так как данные из источника - строки ( см r_opts),
-};
-const W1 = new Writer(w_opts);
-R1.pipe(W1);
+// w_opts = {
+//    decodeStrings: false//данные в _write будут строками в кодировке 'utf8', так как данные из источника - строки ( см r_opts),
+// };
+// const W1 = new Writer(w_opts);
+// R1.pipe(W1);
 
-array_of_data = [1, 2, 3, 4, 5];
-r_opts = {objectMode: true};
-//const R2 = new Source(array_of_data, r_opts);
+// array_of_data = [1, 2, 3, 4, 5];
+// r_opts = {objectMode: true};
+// //const R2 = new Source(array_of_data, r_opts);
 
-w_opts = {
-   objectMode: true//если false, то при записи данных как объектов (см r_opts), будет ошибка "TypeError: Invalid non-string/buffer chunk"
-};
-//const W2 = new Writer(w_opts);
-//R2.pipe(W2);
+// w_opts = {
+//    objectMode: true//если false, то при записи данных как объектов (см r_opts), будет ошибка "TypeError: Invalid non-string/buffer chunk"
+// };
+// //const W2 = new Writer(w_opts);
+// //R2.pipe(W2);
 
-array_of_data = [1, 2, 3, 4, 5];
-r_opts = {objectMode: true};
-//const R3 = new Source(array_of_data, r_opts);
+// array_of_data = [1, 2, 3, 4, 5];
+// r_opts = {objectMode: true};
+// //const R3 = new Source(array_of_data, r_opts);
 
-w_opts = {
-   objectMode: true//если false, то при записи данных как объектов (см r_opts), будет ошибка "TypeError: Invalid non-string/buffer chunk"
-   , highWaterMark: 1 //ограничем буфер; при таком маленьком значении каждый раз будет вызываться событие 'drain'
-};
-//const W3 = new Writer(w_opts);
-//R3.pipe(W3);
+// w_opts = {
+//    objectMode: true//если false, то при записи данных как объектов (см r_opts), будет ошибка "TypeError: Invalid non-string/buffer chunk"
+//    , highWaterMark: 1 //ограничем буфер; при таком маленьком значении каждый раз будет вызываться событие 'drain'
+// };
+// //const W3 = new Writer(w_opts);
+// //R3.pipe(W3);
 
-//Вариант без pipe()
-// const R3_1 = new Source(array_of_data, r_opts);
-// const W3_1 = new Writer(w_opts);
-// R3_1.on('data', (chunk)=> {
-//    //R3_1._readableState.flowing === true
-//    console.log('R3_1 in flowing mode', R3_1._readableState.flowing, 'R3_1 _readableState.buffer', R3_1._readableState.buffer);
-//    toWriteOrNotToWriteThatIsTheQuestion(chunk, onDrain);
-// });
-// function onDrain() {
-//    //R3_1._readableState.flowing === false, так как был вызван метод R3_1.pause() см toWriteOrNotToWriteThatIsTheQuestion
-//    console.log('R3_1 in flowing mode', R3_1._readableState.flowing);
-//    R3_1.resume();
+// //Вариант без pipe()
+// // const R3_1 = new Source(array_of_data, r_opts);
+// // const W3_1 = new Writer(w_opts);
+// // R3_1.on('data', (chunk)=> {
+// //    //R3_1._readableState.flowing === true
+// //    console.log('R3_1 in flowing mode', R3_1._readableState.flowing, 'R3_1 _readableState.buffer', R3_1._readableState.buffer);
+// //    toWriteOrNotToWriteThatIsTheQuestion(chunk, onDrain);
+// // });
+// // function onDrain() {
+// //    //R3_1._readableState.flowing === false, так как был вызван метод R3_1.pause() см toWriteOrNotToWriteThatIsTheQuestion
+// //    console.log('R3_1 in flowing mode', R3_1._readableState.flowing);
+// //    R3_1.resume();
+// // }
+// /**
+//  * если на данный момент не можем больше писать в поток Writable, нужно оставноить и получение данных из Readable (R3_1.pause())
+//  * как только буфер очистится (событие 'drain'), мы продолжаем читать данные из источника Readable (см cb R3_1.resume(); ), и записывать в Writable
+//  * @param data
+//  * @param cb
+//  */
+// function toWriteOrNotToWriteThatIsTheQuestion(data, cb)
+// {
+//    //во "внешнем коде" записывать данные через метод write(...), а не через _write(...)
+//    if (!W3_1.write(data)) {
+//       R3_1.pause();
+//       W3_1.once('drain', cb);
+//    }  else {
+//       process.nextTick(cb);
+//    }
 // }
-/**
- * если на данный момент не можем больше писать в поток Writable, нужно оставноить и получение данных из Readable (R3_1.pause())
- * как только буфер очистится (событие 'drain'), мы продолжаем читать данные из источника Readable (см cb R3_1.resume(); ), и записывать в Writable
- * @param data
- * @param cb
- */
-function toWriteOrNotToWriteThatIsTheQuestion(data, cb)
-{
-   //во "внешнем коде" записывать данные через метод write(...), а не через _write(...)
-   if (!W3_1.write(data)) {
-      R3_1.pause();
-      W3_1.once('drain', cb);
-   }  else {
-      process.nextTick(cb);
-   }
-}
