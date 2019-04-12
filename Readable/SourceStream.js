@@ -52,13 +52,13 @@ class Source extends Readable {
 
 module.exports = Source;
 
-// //const R = new Source(["1","2","3","4","5"], {});
-// array_of_data = ['1', '2', '3', '4', '5'];
+//const R = new Source(["1","2","3","4","5"], {});
+//array_of_data = ['1', '2', '3', '4', '5'];
 // opts = { 
 //     objectMode: false, 
 //     highWaterMark: 1 //1 байт лимит для буферизации данных _readableState.buffer.length будет === 1 
 // }
-// //const R2 = new Source(['1', '2', '3', '4', '5'], opts);
+// const R2 = new Source(['1', '2', '3', '4', '5'], opts);
 // //const R3 = new Source(array_of_data, opts);//кодировку так же можно задать с помощью метода .setEncoding('utf8')
 
 // array_of_data = ['1', '2', '3', '4', '5'];

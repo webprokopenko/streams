@@ -37,10 +37,11 @@ class Writer extends Writable
    {
       console.log('_writableState.getBuffer()', this._writableState.getBuffer());
       console.log('typeof ', typeof chunk );
+      console.log('isBuffer ', Buffer.isBuffer(chunk));
       
       //для пример с потоком Transform см ниже
       if (typeof chunk === 'object') {
-         console.log('chunk = ', chunk.get(), chunk.get() +' in pow '+ chunk.get() +' = '+ chunk.inPow(chunk.get()));
+         console.log('chunk = ', chunk.toString());
       } else {
          console.log(`chunk = ${chunk}; isBuffer ${Buffer.isBuffer(chunk)}; chunk.length is ${chunk.length}; encoding = ${encoding}`);
       }
@@ -58,13 +59,13 @@ class Writer extends Writable
 }
 module.exports = Writer;
 
-// let array_of_data = ['1', '2', '3', '4', '5'];
-// let r_opts = {/* значения по умолчанию */};
-// //const R = new Source(array_of_data, r_opts);
+let array_of_data = ['1', '2', '3', '4', '5'];
+let r_opts = {/* значения по умолчанию */};
+const R = new Source(array_of_data, r_opts);
 
-// let w_opts = {/* значения по умолчанию */};
-// //const W = new Writer(w_opts);
-// //R.pipe(W);
+let w_opts = {/* значения по умолчанию */};
+const W = new Writer(w_opts);
+R.pipe(W);
 
 // array_of_data = ['1', '2', '3', '4', '5'];
 // r_opts = {encoding: 'utf8'};
